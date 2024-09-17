@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="trabalho.js"></script>
+    <title>Formulário de Cadastro</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Formulário de Cadastro</h1>
+    <form id="formCadastro">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required>
+        <br><br>
+        <label for="dataNascimento">Data de Nascimento:</label>
+        <input type="text" id="dataNascimento" name="dataNascimento" placeholder="DD/MM/AAAA" required>
+        <br><br>
+        <input type="submit" value="Submeter">
+    </form>
+
+    <h2>Dados Salvos</h2>
+    <table id="tabelaDados">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Data de Nascimento</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script>
+        document.getElementById('formCadastro').addEventListener('submit', function(event) {
+            event.preventDefault(); // Evita o envio padrão do formulário
+
+            // Obtém os valores dos campos
+            const nome = document.getElementById('nome').value;
+            const dataNascimento = document.getElementById('dataNascimento').value;
+
+            // Valida o nome
+            if (!/^[A-Za-zÀ-ÖØ-ÿ]+$/.test(nome) || nome.length < 3 || nome.length > 120) {
+                alert('Nome deve ter entre 3 e 120 letras e conter apenas letras.');
+                return;
+            }
+
+            // Valida a data de nascimento
+            if (!/^\d{2}\/\d{2}\/\d{4}$/.test(dataNascimento)) {
+                alert('Data de nascimento deve estar no formato DD/MM/AAAA.');
+                return;
+            }
+
+            const [dia, mes, ano] = dataNascimento.split('/').map(Number);
+            if (mes < 1 || mes > 12 || dia < 1 || dia > 31) {
+                alert('Data de nascimento inválida.');
+                return;
+            }
+
+            // Adiciona os dados à tabela
+            const tbody = document.querySelector('#tabelaDados tbody');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${nome}</td><td>${dataNascimento}</td>`;
+            tbody.appendChild(tr);
+
+            // Limpa o formulário
+            document.getElementById('formCadastro').reset();
+        });
+
+        // Função para carregar os dados da tabela ao recarregar a página
+        window.onload = function() {
+            // Simulação de dados salvos
+            const dadosSalvos = [
+                { nome: 'João Silva', dataNascimento: '15/08/1990' },
+                { nome: 'Maria Oliveira', dataNascimento: '22/12/1985' }
+            ];
+
+            const tbody = document.querySelector('#tabelaDados tbody');
+            dadosSalvos.forEach(dado => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${dado.nome}</td><td>${dado.dataNascimento}</td>`;
+                tbody.appendChild(tr);
+            });
+        };
+    </script>
+</body>
+</html>
